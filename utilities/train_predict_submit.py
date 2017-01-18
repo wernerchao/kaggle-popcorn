@@ -10,8 +10,10 @@ class train_predict_submit(object):
         ''' Train and predict with the specified model, vectorized data, data label, test set row id
         and output a submission file with the specified name. '''
 
-        dense_train_features = vec_train_data.toarray()
-        dense_test_features = vec_test_data.toarray()
+        # dense_train_features = vec_train_data.toarray()
+        # dense_test_features = vec_test_data.toarray()
+        dense_train_features = vec_train_data
+        dense_test_features = vec_test_data
 
         model = model_func
         print "Training %s..." % (name)
@@ -19,5 +21,5 @@ class train_predict_submit(object):
         print "Predicting with %s..." % (name)
         pred = model.predict(dense_test_features)
         pred_df = pd.DataFrame(data={'id':test_id, 'sentiment':pred})
-        pred_df.to_csv("Bag_of_Words_Submission_tf_{}.csv".format(name), index=False, quoting=3)
+        pred_df.to_csv("Ensemble_Submission_{}.csv".format(name), index=False, quoting=3)
         return pred_df

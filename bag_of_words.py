@@ -16,7 +16,6 @@ if __name__ == '__main__':
     unlabeled_train = pd.read_csv('data/unlabeledTrainData.tsv', header=0, delimiter='\t', quoting=3)
 
     clean_train_reviews = nlp_text_preprocessing_utility.get_all_cleaned(train['review'], True, True)
-    unlabeled_clean_train_reviews = nlp_text_preprocessing_utility.get_all_cleaned(unlabeled_train['review'], True, True)
     clean_test_reviews = nlp_text_preprocessing_utility.get_all_cleaned(test['review'], True, True)
 
     print "Creating the bag of words for train data...\n"
@@ -24,53 +23,14 @@ if __name__ == '__main__':
                                 tokenizer=None, \
                                 preprocessor=None, \
                                 stop_words=None, \
-                                max_features=100)
+                                max_features=5000)
 
     train_data_features = vectorizer.fit_transform(clean_train_reviews)
     print "Transforming test data according to bag of words...\n"
     test_data_features = vectorizer.transform(clean_test_reviews)
 
-    # Logistic Regression
-    lr = LogisticRegression(class_weight="auto")
-    pred_lr = train_predict_submit.train_predict_submit(lr, \
-                                                        'LogisticRegression', \
-                                                        train_data_features, \
-                                                        test_data_features, \
-                                                        train['sentiment'], \
-                                                        test['id'])
+    pred_df = pd.DataFrame(data=train_data_features.toarray(), index=train['id'])
+    pred_df.to_csv("Bag_of_Words_Train_Features.csv", index=False, quoting=3)
 
-    # Linear Support Vector Classifier
-    lrsvc = LinearSVC()
-    pred_df = train_predict_submit.train_predict_submit(lrsvc, \
-                                                 'LinearSVC', \
-                                                 train_data_features, \
-                                                 test_data_features, \
-                                                 train['sentiment'], \
-                                                 test['id'])
-
-    # SGDClassifier
-    sgdc = SGDClassifier(loss='modified_huber', n_iter=5, random_state=0, shuffle=True)
-    pred_sgdc = train_predict_submit.train_predict_submit(sgdc, \
-                                                          'SGDClassifier', \
-                                                          train_data_features, \
-                                                          test_data_features, \
-                                                          train['sentiment'], \
-                                                          test['id'])
-
-    # Naive Bayes
-    nb = GaussianNB()
-    pred_nb = train_predict_submit.train_predict_submit(nb, \
-                                                        'GaussianNB', \
-                                                        train_data_features, \
-                                                        test_data_features, \
-                                                        train['sentiment'], \
-                                                        test['id'])
-
-    # Multinomia Naive Bayes
-    mnb = MultinomialNB(alpha=0.0005)
-    pred_mnb = train_predict_submit,train_predict_submit(mnb, \
-                                                         'MultinomialNB', \
-                                                         train_data_features, \
-                                                         test_data_features, \
-                                                         train['sentiment'], \
-                                                         test['id'])
+    pred_df = pd.DataFrame(data=test_data_features.toarray(), index=train['id'])
+    pred_df.to_csv("Bag_of_Words_Test_Features.csv", index=False, quoting=3)

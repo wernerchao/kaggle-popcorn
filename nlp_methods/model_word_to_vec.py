@@ -37,9 +37,9 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s: %(levelname)s : %(message)s', level=logging.INFO)
 
     # SOP of getting the data set.
-    train = pd.read_csv('labeledTrainData.tsv', header=0, quoting=3, delimiter='\t')
-    test = pd.read_csv('testData.tsv', header=0, quoting=3, delimiter='\t')
-    unlabeled_train = pd.read_csv('unlabeledTrainData.tsv', header=0, quoting=3, delimiter='\t')
+    train = pd.read_csv('../data/labeledTrainData.tsv', header=0, quoting=3, delimiter='\t')
+    test = pd.read_csv('../data/testData.tsv', header=0, quoting=3, delimiter='\t')
+    unlabeled_train = pd.read_csv('../data/unlabeledTrainData.tsv', header=0, quoting=3, delimiter='\t')
 
     # Convert all paragraphs into a list of sentences of words (list of lists of words).
     sentences = []
@@ -56,9 +56,9 @@ if __name__ == '__main__':
     print "Training Word2Vec model..."
     model = word2vec.Word2Vec(sentences, \
                             workers=4, \
-                            size=300, \
+                            size=1000, \
                             min_count=40, \
                             window=10, \
                             sample=1e-3)
     model.init_sims(replace=True)
-    model.save('300features_40minwords_10context')
+    model.save('1000features_40minwords_10context')
