@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier, LogisticRegression
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.model_selection import cross_val_score
 
 from utilities import train_predict_submit
 
@@ -17,8 +18,14 @@ if __name__ == '__main__':
     train_w2v = pd.read_csv('../nlp_output/Word2Vec_Train_Features.csv')
     test_w2v = pd.read_csv('../nlp_output/Word2Vec_Test_Features.csv')
 
+    train_boc = pd.read_csv('../nlp_output/Bag_of_Centroids_Train_Features.csv')
+    test_boc = pd.read_csv('../nlp_output/Bag_of_Centroids_Test_Features.csv')
+
     train_bow_w2v = np.hstack((train_bow, train_w2v))
     test_bow_w2v = np.hstack((test_bow, test_w2v))
+
+    train_bow_boc = np.hstack((train_bow, train_boc))
+    test_bow_boc = np.hstack((train_bow, train_boc))
 
     # Logistic Regression
     lr = LogisticRegression(class_weight="auto")
@@ -70,3 +77,5 @@ if __name__ == '__main__':
                                                         test_bow_w2v, \
                                                         train['sentiment'], \
                                                         test['id'])
+
+    # TODO: do a voting from all prediction, using the mean from prediction as threshold

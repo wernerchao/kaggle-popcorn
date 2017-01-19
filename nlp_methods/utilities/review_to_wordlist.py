@@ -37,7 +37,22 @@ class nlp_text_preprocessing_utility(object):
         for i in range(num_reviews):
             if i%5000 == 0:
                 print 'Review %d of %d\n' %(i, num_reviews)
-            clean_reviews.append(nlp_text_preprocessing_utility.review_to_wordlist(raw[i], \
-                                                                                   remove_stopwords, \
-                                                                                   join_with_space))
+            clean_reviews.append(nlp_text_preprocessing_utility.review_to_wordlist( \
+                raw[i], \
+                remove_stopwords, \
+                join_with_space))
         return clean_reviews
+
+
+    @staticmethod
+    def review_to_sentences(raw, tokenizer, remove_stopwords=False, join_with_space=False):
+        ''' Given a paragraph, returns a list of sentences of words (list of list of words). '''
+
+        raw_sentences = tokenizer.tokenize(raw.decode('utf-8').strip())
+        sentences = []
+        for raw_sentence in raw_sentences:
+            if len(raw_sentence) > 0:
+                sentences.append( \
+                    nlp_text_preprocessing_utility.review_to_wordlist( \
+                        raw_sentence, remove_stopwords, join_with_space))
+        return sentences
